@@ -101,16 +101,22 @@ class AddMovie(webapp2.RequestHandler):
         # look inside the request to figure out what the user typed
         new_movie = self.request.get("new-movie")
 
-        # TODO 2
         # if the user typed nothing at all, redirect and yell at them
+        if new_movie == "":
+            error = "Please specify the name of the movie you want to add"
+            self.redirect("/?error="+error)
 
-
-        # TODO 3
         # if the user wants to add a terrible movie, redirect and yell at them
+        bad_movie = False
+        for m in terrible_movies:
+            if m.lower() == new_movie.lower():
+                bad_movie = True
+        if new_movie in terrible_movies or bad_movie:
+            error = "Trust me, you don't want to add '%s' to your Watchlist." % cgi.escape(new_movie)
+            self.redirect("/?error="+error)
 
-
-        # TODO 1
         # 'escape' the user's input so that if they typed HTML, it doesn't mess up our site
+        new_movie = cgi.escape(new_movie)
 
         # build response content
         new_movie_element = "<strong>" + new_movie + "</strong>"
